@@ -2,12 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const dotenv = require('dotenv');
+
 dotenv.config();
 
 const { MONGO_CONNECTION_STR, PORT } = process.env;
 const app = express();
 
-const produtosRoute = require('./routes/produtos');
+const produtosRoute = require('./routes/router-produtos');
 
 mongoose
 	.connect(MONGO_CONNECTION_STR)
