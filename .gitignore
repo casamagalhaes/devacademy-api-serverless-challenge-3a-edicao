@@ -20,6 +20,5 @@ tmp/*
 .eslintcache
 
 # dotenv
-.env
 .env.test
 .env.production
