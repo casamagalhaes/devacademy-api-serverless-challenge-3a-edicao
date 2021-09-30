@@ -1,0 +1,328 @@
+openapi: 3.0.1
+info:
+  title: REST API - Node
+  description: Simple REST API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: produto
+    description: Produto Collection
+
+  - name: cliente
+    description: Client Collection
+
+paths:
+  /produtos:
+    get:
+      tags:
+        - produto
+      summary: List produtos
+      operationId: listProdutos
+      responses:
+        200:
+          description: List of produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'
+      x-codegen-request-body-name: body
+    post:
+      tags:
+        - produto
+      summary: Add a new produto
+      operationId: addProduto
+      requestBody:
+        description: Payload of produto
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        400:
+          description: Invalid input
+          content: {}
+      x-codegen-request-body-name: body
+  /produtos/{produtoId}:
+    get:
+      tags:
+        - produto
+      summary: Find produto by ID
+      description: Returns a single produto
+      operationId: getProdutoById
+      parameters:
+        - name: produtoId
+          in: path
+          description: ID of produto to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Produto not found
+          content: {}
+    put:
+      tags:
+        - produto
+      summary: Updates a produto
+      operationId: udpateProduto
+      parameters:
+        - name: produtoId
+          in: path
+          description: ID of produto that needs to be updated
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+    delete:
+      tags:
+        - produto
+      summary: Deletes a produto
+      operationId: deleteProduto
+      parameters:
+        - name: produtoId
+          in: path
+          description: Produto id to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        206:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Produto not found
+          content: {}
+  /produtos/{produtoNome}:
+    get:
+      tags:
+        - produto
+      summary: Find produto by Nome
+      description: List of produtos with Nome containing produtoNome
+      operationId: getProdutosByNome
+      parameters:
+        - name: produtoNome
+          in: path
+          description: Nome of produto to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        400:
+          description: Invalid Nome supplied
+          content: {}
+        404:
+          description: No Produto found
+          content: {}
+
+  /clientes:
+    get:
+      tags:
+        - cliente
+      summary: List clientes
+      operationId: listClientes
+      responses:
+        200:
+          description: List of clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+      x-codegen-request-body-name: body
+
+    post:
+      tags:
+        - cliente
+      summary: Add a new cliente
+      operationId: addCliente
+      requestBody:
+        description: Payload of cliente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cliente'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        400:
+          description: Invalid input
+          content: {}
+      x-codegen-request-body-name: body
+
+  /clientes/{clienteId}:
+    get:
+      tags:
+        - cliente
+      summary: Find cliente by ID
+      description: Returns a single cliente
+      operationId: getClienteById
+      parameters:
+        - name: clienteId
+          in: path
+          description: ID of cliente to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Cliente not found
+          content: {}
+    put:
+      tags:
+        - cliente
+      summary: Updates a cliente
+      operationId: updateCliente
+      parameters:
+        - name: clienteId
+          in: path
+          description: ID of cliente that needs to be updated
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cliente'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+    delete:
+      tags:
+        - cliente
+      summary: Deletes a cliente
+      operationId: deleteCliente
+      parameters:
+        - name: clienteId
+          in: path
+          description: Cliente id to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        206:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Cliente not found
+          content: {}
+
+  /clientes/{clienteName}:
+    get:
+      tags:
+        - cliente
+      summary: Find cliente by Nome
+      description: List of clientes with Nome containing clienteName
+      operationId: getClientesByNome
+      parameters:
+        - name: clientNome
+          in: path
+          description: Nome of cliente to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        400:
+          description: Invalid Nome supplied
+          content: {}
+        404:
+          description: No cliente found
+          content: {}
+components:
+  schemas:
+    Produto:
+      required:
+        - nome
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        preco:
+          type: number
+    Cliente:
+      required:
+        - nome
+        - password
+        - email
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nome: type:string
+        email:
+          type: string
+        password:
+          type: string
