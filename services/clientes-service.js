@@ -8,7 +8,7 @@ const { Validate } = require('../lib/errors/validate');
 
 const { ErrorMessages } = require('../lib/errors/error-messages');
 
-const { Produto } = require('../models/Produto');
+const { Cliente } = require('../models/Cliente');
 
 const { ENDPOINT } = process.env.DYNAMODB_ENDPOINT;
 
@@ -22,13 +22,13 @@ module.exports = class ProdutosService {
 
 		this.mapper = new DataMapper({ client: this.client });
 
-		this.Model = Produto;
+		this.Model = Cliente;
 	}
 
-	async validateProd(produto) {
-		Validate.isEmpty(produto.nome);
-		Validate.isEmpty(produto.preco);
-		Validate.isNonNegative(produto.preco);
+	async validateCliente(cliente) {
+		Validate.isEmpty(cliente.nome);
+		Validate.isEmpty(cliente.preco);
+		Validate.isNonNegative(cliente.preco);
 	}
 
 	async validateIdExists(id) {
@@ -46,7 +46,7 @@ module.exports = class ProdutosService {
 
 	// GET All
 	async getAll(filterName) {
-		const produtos = [];
+		const clientes = [];
 
 		const defaultCondition = {
 			type: 'Function',
@@ -63,21 +63,21 @@ module.exports = class ProdutosService {
 
 		const iterator = this.mapper.scan(this.Model, scanFilter);
 
-		for await (const produto of iterator) {
-			produtos.push(produto);
+		for await (const cliente of iterator) {
+			clientes.push(cliente);
 		}
 
-		return produtos;
+		return clientes;
 	}
 
 	// GET By Id
 	async getById(id) {
-		let product = {};
+		let cliente = {};
 		try {
-			product = await this.mapper.get(new this.Model({ id }));
+			cliente = await this.mapper.get(new this.Model({ id }));
 
-			if (!product.deletedAt) {
-				return product;
+			if (!cliente.deletedAt) {
+				return cliente;
 			}
 		} catch (e) {
 			if (e.name === 'ItemNotFoundException') {
@@ -86,40 +86,40 @@ module.exports = class ProdutosService {
 
 			throw e;
 		}
-		return product;
+		return cliente;
 	}
 
 	// POST
 	async post(item) {
 		await this.validateProd(item);
 
-		const modelProduto = new this.Model({ id: uuid(), ...item });
+		const modelCliente = new this.Model({ id: uuid(), ...item });
 
-		await this.save(modelProduto);
+		await this.save(modelCliente);
 
-		return modelProduto;
+		return modelCliente;
 	}
 
 	// PUT
 	async put(id, body) {
 		/* Validates before trying to insert */
 		Validate.validateIds(id, body.id);
-		await this.validateProd(body);
+		await this.validateCliente(body);
 		await this.validateIdExists(id);
 
-		const newProduto = new this.Model({ id, ...body });
+		const newCliente = new this.Model({ id, ...body });
 
-		return this.saveItem(newProduto);
+		return this.saveItem(newCliente);
 	}
 
 	// DELETE
 	async delete(id) {
-		const produtoToDelete = await this.getById(id);
+		const clienteToDelete = await this.getById(id);
 
-		if (!produtoToDelete) {
+		if (!clienteToDelete) {
 			ErrorMessages.notFoundResource();
 		}
 
-		return this.mapper.delete(produtoToDelete, { onMissing: 'skip' });
+		return this.mapper.delete(clienteToDelete, { onMissing: 'skip' });
 	}
 };

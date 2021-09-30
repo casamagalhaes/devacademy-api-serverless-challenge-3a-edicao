@@ -1,87 +1,45 @@
 const router = require('express').Router();
-const cryptoJs = require('crypto-js');
-const Cliente = require('../models/Cliente');
 
-/* Get All Clientes */
-router.get('/clientes', async (req, res) => {
-	const filterName = req.query.filter;
-	let clientes = [];
+const ClientesService = require('../services/clientes-service');
 
-	const regex = new RegExp(`.*${filterName}.*`, 'i');
-	const query = filterName ? { nome: regex } : null;
+const clientesService = new ClientesService();
 
-	try {
-		if (filterName) {
-			const clienteFound = await Cliente.find(query);
-			clientes = clienteFound;
-		} else {
-			clientes = await Cliente.find();
-		}
+/* Get All Clientes or Cliente by Nome if a filter
+   is passed as query
+*/
+router.get('/clientes', async (req) => {
+	const filterName = req.query.filter || null;
+	const result = await clientesService.getAll(filterName);
 
-		res.status(200).json(clientes);
-	} catch (e) {
-		res.status(500).json(e);
-	}
+	return result;
 });
 
 /* Get Cliente by Id */
-router.get('/clientes/:id', async (req, res) => {
-	const { id } = req.params;
+router.get('/clientes/:id', async (req) => {
+	const result = await clientesService.getById(req.params.id);
 
-	try {
-		const cliente = await Cliente.findById(id);
-		res.status(200).json(cliente);
-	} catch (e) {
-		res.status(500).json(e);
-	}
+	return result;
 });
 
 /* Insert Cliente */
 router.post('/clientes', async (req, res) => {
-	const { nome, email, password } = req.body;
+	const result = await clientesService.post(req.bodyParsed);
 
-	/* Creates a new Cliente */
-	const newCliente = new Cliente({
-		nome,
-		email,
-		password: cryptoJs.AES.encrypt(
-			password,
-			process.env.SECRET_PASS
-		).toString(),
-	});
-
-	try {
-		const insertedCliente = await newCliente.save();
-		/* Successful insertion */
-		res.status(201).json(insertedCliente);
-	} catch (e) {
-		res.status(500).json(e);
-	}
+	return res(result, { statusCode: 201 });
 });
 
 /* Update Cliente */
-router.put('/clientes/:id', async (req, res) => {
-	try {
-		const updatedCliente = await Cliente.findByIdAndUpdate(
-			req.params.id,
-			{ $set: req.body },
-			{ new: true }
-		);
+router.put('/clientes/:id', async (req) => {
+	const result = await clientesService.put(req.params.id, req.bodyParsed);
 
-		res.status(500).json(updatedCliente);
-	} catch (e) {
-		res.status(500).json(e);
-	}
+	return result;
 });
 
 /* Delete Cliente */
 router.delete('/clientes/:id', async (req, res) => {
-	try {
-		await Cliente.findByIdAndDelete(req.params.id);
-		res.status(200).json('Cliente deleted');
-	} catch (e) {
-		res.status(500).json(e);
-	}
+	await clientesService.delete(req.params.id);
+
+	return res(null, { statusCode: 204 });
 });
 
 module.exports = router;
