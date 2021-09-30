@@ -1,12 +1,24 @@
-const mongoose = require('mongoose');
+const { DynamoDbSchema, DynamoDbTable } = require('@aws/dynamodb-data-mapper');
 
-const ClienteSchema = new mongoose.Schema(
-	{
-		nome: { type: String, required: true },
-		email: { type: String, required: true },
-		password: { type: String, required: true },
-	},
-	{ timestamps: true }
-);
+class Cliente {
+	get [DynamoDbTable]() {
+		this.tableName = 'clientes';
+		return this.tableName;
+	}
 
-module.exports = mongoose.model('Clientes', ClienteSchema);
+	get [DynamoDbSchema]() {
+		this.clienteSchema = {
+			id: {
+				type: 'String',
+				keyType: 'HASH',
+			},
+			nome: { type: 'String' },
+			email: { type: 'String' },
+			password: { type: 'String' },
+		};
+
+		return this.clienteSchema;
+	}
+}
+
+module.exports = Cliente;
