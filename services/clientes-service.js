@@ -3,6 +3,7 @@
 const { DataMapper } = require('@aws/dynamodb-data-mapper');
 const { DynamoDB, Endpoint } = require('aws-sdk');
 const { v4: uuid } = require('uuid');
+const dotenv = require('dotenv');
 
 const { Validate } = require('../lib/errors/validate');
 
@@ -10,15 +11,16 @@ const { ErrorMessages } = require('../lib/errors/error-messages');
 
 const { Cliente } = require('../models/Cliente');
 
-const { ENDPOINT } = process.env.DYNAMODB_ENDPOINT;
+dotenv.config();
 
+const { DYNAMODB_ENDPOINT } = process.env;
 module.exports = class ProdutosService {
 	constructor() {
-		this.client = new DynamoDB(
-			...(ENDPOINT && {
-				endpoint: new Endpoint(ENDPOINT),
-			})
-		);
+		this.client = new DynamoDB({
+			...(DYNAMODB_ENDPOINT && {
+				endpoint: new Endpoint(DYNAMODB_ENDPOINT),
+			}),
+		});
 
 		this.mapper = new DataMapper({ client: this.client });
 
