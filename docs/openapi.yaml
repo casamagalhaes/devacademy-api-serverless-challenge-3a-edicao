@@ -1,45 +1,45 @@
 openapi: 3.0.1
 info:
-  title: REST API - Node
-  description: Simple REST API
+  title: REST API - Workshop CM
+  description: REST API
   version: 1.0.0
 servers:
   - url: http://localhost:3000
 tags:
-  - name: produto
-    description: Produto Collection
+  - name: products
+    description: Products Collection
 
-  - name: cliente
-    description: Client Collection
+  - name: clients
+    description: Clients Collection
 
 paths:
-  /produtos:
+  /products:
     get:
       tags:
-        - produto
-      summary: List produtos
-      operationId: listProdutos
+        - product
+      summary: List products
+      operationId: listProducts
       responses:
         200:
-          description: List of produtos
+          description: List of products
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Produto'
+                  $ref: "#/components/schemas/Product"
       x-codegen-request-body-name: body
     post:
       tags:
-        - produto
-      summary: Add a new produto
-      operationId: addProduto
+        - product
+      summary: Add a new product
+      operationId: addProduct
       requestBody:
-        description: Payload of produto
+        description: Payload of product
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Produto'
+              $ref: "#/components/schemas/Product"
         required: true
       responses:
         200:
@@ -47,22 +47,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Produto'
+                $ref: "#/components/schemas/Product"
         400:
           description: Invalid input
           content: {}
       x-codegen-request-body-name: body
-  /produtos/{produtoId}:
+  /products/{productId}:
     get:
       tags:
-        - produto
-      summary: Find produto by ID
-      description: Returns a single produto
-      operationId: getProdutoById
+        - product
+      summary: Find product by ID
+      description: Returns a single product
+      operationId: getProductById
       parameters:
-        - name: produtoId
+        - name: productId
           in: path
-          description: ID of produto to return
+          description: ID of product to return
           required: true
           schema:
             type: string
@@ -73,22 +73,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Produto'
+                $ref: "#/components/schemas/Product"
         400:
           description: Invalid ID supplied
           content: {}
         404:
-          description: Produto not found
+          description: Product not found
           content: {}
     put:
       tags:
-        - produto
-      summary: Updates a produto
-      operationId: udpateProduto
+        - product
+      summary: Updates a product
+      operationId: updateProduct
       parameters:
-        - name: produtoId
+        - name: productId
           in: path
-          description: ID of produto that needs to be updated
+          description: ID of product that needs to be updated
           required: true
           schema:
             type: string
@@ -97,23 +97,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Produto'
+              $ref: "#/components/schemas/product"
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Produto'
+                $ref: "#/components/schemas/product"
     delete:
       tags:
-        - produto
-      summary: Deletes a produto
-      operationId: deleteProduto
+        - product
+      summary: Deletes a product
+      operationId: deleteProduct
       parameters:
-        - name: produtoId
+        - name: productId
           in: path
-          description: Produto id to delete
+          description: product id to delete
           required: true
           schema:
             type: string
@@ -123,19 +123,19 @@ paths:
           description: Invalid ID supplied
           content: {}
         404:
-          description: Produto not found
+          description: Product not found
           content: {}
-  /produtos/{produtoNome}:
+  /products/{productName}:
     get:
       tags:
-        - produto
-      summary: Find produto by Nome
-      description: List of produtos with Nome containing produtoNome
-      operationId: getProdutosByNome
+        - product
+      summary: Find product by Name
+      description: List of products with Name containing productName
+      operationId: getproductsByName
       parameters:
-        - name: produtoNome
+        - name: productName
           in: path
-          description: Nome of produto to return
+          description: Name of product to return
           required: true
           schema:
             type: string
@@ -146,42 +146,42 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Produto'
+                $ref: "#/components/schemas/Product"
         400:
-          description: Invalid Nome supplied
+          description: Invalid Name supplied
           content: {}
         404:
-          description: No Produto found
+          description: No product found
           content: {}
 
-  /clientes:
+  /clients:
     get:
       tags:
-        - cliente
-      summary: List clientes
-      operationId: listClientes
+        - client
+      summary: List clients
+      operationId: listClients
       responses:
         200:
-          description: List of clientes
+          description: List of clients
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Cliente'
+                  $ref: "#/components/schemas/Client"
       x-codegen-request-body-name: body
 
     post:
       tags:
-        - cliente
-      summary: Add a new cliente
-      operationId: addCliente
+        - client
+      summary: Add a new client
+      operationId: addClient
       requestBody:
-        description: Payload of cliente
+        description: Payload of client
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: "#/components/schemas/Client"
         required: true
       responses:
         200:
@@ -189,23 +189,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'
+                $ref: "#/components/schemas/Client"
         400:
           description: Invalid input
           content: {}
       x-codegen-request-body-name: body
 
-  /clientes/{clienteId}:
+  /clients/{clientId}:
     get:
       tags:
-        - cliente
-      summary: Find cliente by ID
-      description: Returns a single cliente
-      operationId: getClienteById
+        - client
+      summary: Find client by ID
+      description: Returns a single client
+      operationId: getClientById
       parameters:
-        - name: clienteId
+        - name: clientId
           in: path
-          description: ID of cliente to return
+          description: ID of client to return
           required: true
           schema:
             type: string
@@ -216,22 +216,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'
+                $ref: "#/components/schemas/Client"
         400:
           description: Invalid ID supplied
           content: {}
         404:
-          description: Cliente not found
+          description: client not found
           content: {}
     put:
       tags:
-        - cliente
-      summary: Updates a cliente
-      operationId: updateCliente
+        - client
+      summary: Updates a client
+      operationId: updateClient
       parameters:
-        - name: clienteId
+        - name: clientId
           in: path
-          description: ID of cliente that needs to be updated
+          description: ID of client that needs to be updated
           required: true
           schema:
             type: string
@@ -240,23 +240,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: "#/components/schemas/Client"
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'
+                $ref: "#/components/schemas/Client"
     delete:
       tags:
-        - cliente
-      summary: Deletes a cliente
-      operationId: deleteCliente
+        - client
+      summary: Deletes a client
+      operationId: deleteClient
       parameters:
-        - name: clienteId
+        - name: clientId
           in: path
-          description: Cliente id to delete
+          description: client id to delete
           required: true
           schema:
             type: string
@@ -266,20 +266,20 @@ paths:
           description: Invalid ID supplied
           content: {}
         404:
-          description: Cliente not found
+          description: client not found
           content: {}
 
-  /clientes/{clienteName}:
+  /clients/{clientName}:
     get:
       tags:
-        - cliente
-      summary: Find cliente by Nome
-      description: List of clientes with Nome containing clienteName
-      operationId: getClientesByNome
+        - client
+      summary: Find client by Name
+      description: List of clients with Name containing clientName
+      operationId: getClientsByName
       parameters:
-        - name: clientNome
+        - name: clientName
           in: path
-          description: Nome of cliente to return
+          description: Name of client to return
           required: true
           schema:
             type: string
@@ -290,30 +290,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'
+                $ref: "#/components/schemas/Client"
         400:
-          description: Invalid Nome supplied
+          description: Invalid name supplied
           content: {}
         404:
-          description: No cliente found
+          description: No Client found
           content: {}
 components:
   schemas:
-    Produto:
+    Product:
       required:
-        - nome
+        - name
       type: object
       properties:
         id:
           type: string
           format: uuid
-        nome:
+        Name:
           type: string
-        preco:
+        price:
           type: number
-    Cliente:
+    Client:
       required:
-        - nome
+        - name
         - password
         - email
       type: object
@@ -321,7 +321,7 @@ components:
         id:
           type: string
           format: uuid
-        nome: type:string
+        name: type:string
         email:
           type: string
         password:

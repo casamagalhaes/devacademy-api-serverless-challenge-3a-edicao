@@ -1,24 +1,24 @@
 const { DynamoDbSchema, DynamoDbTable } = require('@aws/dynamodb-data-mapper');
 
-class Cliente {
+class Client {
 	get [DynamoDbTable]() {
-		this.tableName = 'clientes';
+		this.tableName = 'clients';
 		return this.tableName;
 	}
 
 	get [DynamoDbSchema]() {
-		this.clienteSchema = {
+		this.clientSchema = {
 			id: {
 				type: 'String',
 				keyType: 'HASH',
 			},
-			nome: { type: 'String' },
+			name: { type: 'String' },
 			email: { type: 'String' },
 			password: { type: 'String' },
 		};
 
-		return this.clienteSchema;
+		return this.clientSchema;
 	}
 }
 
-module.exports = Cliente;
+module.exports = Client;

@@ -1,20 +1,18 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable class-methods-use-this */
 const { DataMapper } = require('@aws/dynamodb-data-mapper');
-const { DynamoDB, Endpoint } = require('aws-sdk');
 const { v4: uuid } = require('uuid');
-const dotenv = require('dotenv');
+const { Endpoint } = require('aws-sdk');
+
+const DynamoDB = require('aws-sdk/clients/dynamodb');
 
 const { Validate } = require('../lib/errors/validate');
-
 const { ErrorMessages } = require('../lib/errors/error-messages');
-
-const { Cliente } = require('../models/Cliente');
-
-dotenv.config();
+const { Client } = require('../models/Client');
 
 const { DYNAMODB_ENDPOINT } = process.env;
-module.exports = class ProdutosService {
+
+module.exports = class clientService {
 	constructor() {
 		this.client = new DynamoDB({
 			...(DYNAMODB_ENDPOINT && {
@@ -24,13 +22,13 @@ module.exports = class ProdutosService {
 
 		this.mapper = new DataMapper({ client: this.client });
 
-		this.Model = Cliente;
+		this.Model = Client;
 	}
 
-	async validateCliente(cliente) {
-		Validate.isEmpty(cliente.nome);
-		Validate.isEmpty(cliente.preco);
-		Validate.isNonNegative(cliente.preco);
+	async validateClient(client) {
+		Validate.isEmpty(client.name);
+		Validate.isEmpty(client.price);
+		Validate.isNonNegative(client.price);
 	}
 
 	async validateIdExists(id) {
@@ -74,12 +72,12 @@ module.exports = class ProdutosService {
 
 	// GET By Id
 	async getById(id) {
-		let cliente = {};
+		let client = null;
 		try {
-			cliente = await this.mapper.get(new this.Model({ id }));
+			client = await this.mapper.get(new this.Model({ id }));
 
-			if (!cliente.deletedAt) {
-				return cliente;
+			if (!client.deletedAt) {
+				return client;
 			}
 		} catch (e) {
 			if (e.name === 'ItemNotFoundException') {
@@ -88,40 +86,41 @@ module.exports = class ProdutosService {
 
 			throw e;
 		}
-		return cliente;
+		return client;
 	}
 
 	// POST
 	async post(item) {
 		await this.validateProd(item);
 
-		const modelCliente = new this.Model({ id: uuid(), ...item });
+		const modelClient = new this.Model({ id: uuid(), ...item });
 
-		await this.save(modelCliente);
+		await this.save(modelClient);
 
-		return modelCliente;
+		return modelClient;
 	}
 
 	// PUT
 	async put(id, body) {
 		/* Validates before trying to insert */
 		Validate.validateIds(id, body.id);
-		await this.validateCliente(body);
+		await this.validateClient(body);
 		await this.validateIdExists(id);
 
-		const newCliente = new this.Model({ id, ...body });
+		const newClient = new this.Model({ id, ...body });
 
-		return this.saveItem(newCliente);
+		return this.save(newClient);
 	}
 
 	// DELETE
 	async delete(id) {
-		const clienteToDelete = await this.getById(id);
+		const clientToDelete = await this.getById(id);
 
-		if (!clienteToDelete) {
+		/* Client doesn't exist */
+		if (!clientToDelete) {
 			ErrorMessages.notFoundResource();
 		}
 
-		return this.mapper.delete(clienteToDelete, { onMissing: 'skip' });
+		return this.mapper.delete(clientToDelete, { onMissing: 'skip' });
 	}
 };

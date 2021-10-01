@@ -1,29 +1,44 @@
-/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 const { Endpoint } = require('aws-sdk');
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 
-const dynamodb = new DynamoDB(new Endpoint(process.env.DYNAMODB_ENDPOINT));
+const { DYNAMODB_ENDPOINT } = process.env;
 
-const getTableConfig = (tableName, attrName) => ({
-	TableName: tableName,
-	KeySchema: [{ AttributeName: attrName, KeyType: 'HASH' }],
+const dynamodb = new DynamoDB({
+	...(DYNAMODB_ENDPOINT && { endpoint: new Endpoint(DYNAMODB_ENDPOINT) }),
+});
+
+/**
+ * @param {*} tableName - name of table
+ * @param {*} attrName - name of attribute
+ * @returns - returns a DescribeTable with defined values for AttributeType, KeyType,
+ * ReadCapacityUnits and WriteCapacityUnits.
+ */
+const describeTable = (tableName, attrName) => ({
 	AttributeDefinitions: [{ AttributeName: attrName, AttributeType: 'S' }],
+	KeySchema: [{ AttributeName: attrName, KeyType: 'HASH' }],
 	ProvisionedThroughput: {
 		ReadCapacityUnits: 100,
 		WriteCapacityUnits: 100,
 	},
+	TableName: tableName,
 });
 
 const tables = [
-	getTableConfig('produtos', 'id'),
-	getTableConfig('clientes', 'id'),
+	describeTable('produtos', 'id'),
+	describeTable('clientes', 'id'),
 ];
 
-/* Checks if a table already exists */
-const tableExists = async (name) => {
+/**
+ * Checks if a table already exists
+ * @returns true if the table exists,
+ * otherwise returns false
+ */
+const tableExists = async (TableName) => {
 	try {
-		await dynamodb.describeTable({ TableName: name }).promise();
+		await dynamodb.describeTable({ TableName }).promise();
 		return true;
 	} catch (e) {
 		if (e.code !== 'ResourceNotFoundException') {

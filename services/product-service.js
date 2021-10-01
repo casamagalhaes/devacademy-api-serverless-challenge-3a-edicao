@@ -1,21 +1,18 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable class-methods-use-this */
 const { DataMapper } = require('@aws/dynamodb-data-mapper');
-const { DynamoDB, Endpoint } = require('aws-sdk');
+const { Endpoint } = require('aws-sdk');
 const { v4: uuid } = require('uuid');
-const dotenv = require('dotenv');
+
+const DynamoDB = require('aws-sdk/clients/dynamodb');
 
 const { Validate } = require('../lib/errors/validate');
-
 const { ErrorMessages } = require('../lib/errors/error-messages');
-
-const { Produto } = require('../models/Produto');
-
-dotenv.config();
+const { Product } = require('../models/Product');
 
 const { DYNAMODB_ENDPOINT } = process.env;
 
-module.exports = class ProdutosService {
+module.exports = class productService {
 	constructor() {
 		this.client = new DynamoDB({
 			...(DYNAMODB_ENDPOINT && {
@@ -25,13 +22,13 @@ module.exports = class ProdutosService {
 
 		this.mapper = new DataMapper({ client: this.client });
 
-		this.Model = Produto;
+		this.Model = Product;
 	}
 
-	async validateProd(produto) {
-		Validate.isEmpty(produto.nome);
-		Validate.isEmpty(produto.preco);
-		Validate.isNonNegative(produto.preco);
+	async validateProd(product) {
+		Validate.isEmpty(product.nome);
+		Validate.isEmpty(product.price);
+		Validate.isNonNegative(product.price);
 	}
 
 	async validateIdExists(id) {
@@ -49,7 +46,7 @@ module.exports = class ProdutosService {
 
 	// GET All
 	async getAll(filterName) {
-		const produtos = [];
+		const products = [];
 
 		const defaultCondition = {
 			type: 'Function',
@@ -66,11 +63,11 @@ module.exports = class ProdutosService {
 
 		const iterator = this.mapper.scan(this.Model, scanFilter);
 
-		for await (const produto of iterator) {
-			produtos.push(produto);
+		for await (const product of iterator) {
+			products.push(product);
 		}
 
-		return produtos;
+		return products;
 	}
 
 	// GET By Id
@@ -96,11 +93,11 @@ module.exports = class ProdutosService {
 	async post(item) {
 		await this.validateProd(item);
 
-		const modelProduto = new this.Model({ id: uuid(), ...item });
+		const modelProduct = new this.Model({ id: uuid(), ...item });
 
-		await this.save(modelProduto);
+		await this.save(modelProduct);
 
-		return modelProduto;
+		return modelProduct;
 	}
 
 	// PUT
@@ -110,19 +107,19 @@ module.exports = class ProdutosService {
 		await this.validateProd(body);
 		await this.validateIdExists(id);
 
-		const newProduto = new this.Model({ id, ...body });
+		const newProduct = new this.Model({ id, ...body });
 
-		return this.saveItem(newProduto);
+		return this.saveItem(newProduct);
 	}
 
 	// DELETE
 	async delete(id) {
-		const produtoToDelete = await this.getById(id);
+		const productToDelete = await this.getById(id);
 
-		if (!produtoToDelete) {
+		if (!productToDelete) {
 			ErrorMessages.notFoundResource();
 		}
 
-		return this.mapper.delete(produtoToDelete, { onMissing: 'skip' });
+		return this.mapper.delete(productToDelete, { onMissing: 'skip' });
 	}
 };

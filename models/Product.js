@@ -1,23 +1,23 @@
 const { DynamoDbSchema, DynamoDbTable } = require('@aws/dynamodb-data-mapper');
 
-class Produto {
+class product {
 	get [DynamoDbTable]() {
-		this.tableName = 'produtos';
+		this.tableName = 'products';
 
 		return this.tableName;
 	}
 
 	get [DynamoDbSchema]() {
-		this.produtoSchema = {
+		this.productSchema = {
 			id: {
 				type: 'String',
 				keyType: 'HASH',
 			},
 			nome: { type: 'String' },
-			preco: { type: 'String' },
+			price: { type: 'String' },
 		};
-		return this.produtoSchema;
+		return this.productSchema;
 	}
 }
 
-module.exports = Produto;
+module.exports = product;
