@@ -1,8 +1,12 @@
 const { DynamoDbSchema, DynamoDbTable } = require('@aws/dynamodb-data-mapper');
 
 class Client {
+	constructor(options = {}) {
+		Object.assign(this, options);
+	}
+
 	get [DynamoDbTable]() {
-		this.tableName = 'clients';
+		this.tableName = process.env.CLIENTS_TABLE || 'clients';
 		return this.tableName;
 	}
 

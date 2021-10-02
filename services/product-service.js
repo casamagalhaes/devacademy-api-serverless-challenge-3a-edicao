@@ -31,7 +31,7 @@ module.exports = class productService {
 	}
 
 	async validateIdExists(id) {
-		const idExists = await this.findById(id);
+		const idExists = await this.getById(id);
 
 		if (!idExists) {
 			ErrorMessages.notFoundResource('id');
@@ -113,7 +113,7 @@ module.exports = class productService {
 
 	// DELETE BY ID
 	async deleteById(id) {
-		const productToDelete = await this.findById(id);
+		const productToDelete = await this.getById(id);
 
 		if (!productToDelete) {
 			ErrorMessages.notFoundResource('id');
