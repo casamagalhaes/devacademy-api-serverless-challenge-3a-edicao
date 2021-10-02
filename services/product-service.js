@@ -47,7 +47,7 @@ module.exports = class productService {
 	}
 
 	// GET All
-	async findAll(filterName) {
+	async findAll() {
 		const products = [];
 		const filterSortId = {
 			type: 'Function',
@@ -55,14 +55,14 @@ module.exports = class productService {
 			subject: 'id',
 		};
 
-		console.log(filterName);
-
 		const scanFilter = {
 			filter: {
 				type: 'And',
 				conditions: [filterSortId],
 			},
 		};
+
+		// console.log(filterName);
 
 		const iterator = this.mapper.scan(this.model, scanFilter);
 

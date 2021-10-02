@@ -10,7 +10,7 @@ const productService = new ProductService();
  * Get All products or product by name
  */
 router.get('/', async (req) => {
-	const filterName = req.query ? req.query : undefined;
+	const filterName = req.query ? req.query.filter : undefined;
 
 	const result = await productService.findAll(filterName);
 	return result;
