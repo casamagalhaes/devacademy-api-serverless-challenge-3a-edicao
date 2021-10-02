@@ -7,7 +7,7 @@ module.exports.handler = async (event) => {
 	const app = new App(event);
 
 	try {
-		if (event.path === '/produtos') {
+		if (event.path.startsWith('/produtos')) {
 			app.router(productsRouter);
 		} else if (event.path === '/clientes') {
 			app.router(clientsRouter);

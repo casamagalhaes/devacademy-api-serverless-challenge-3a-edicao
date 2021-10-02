@@ -1,53 +1,65 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"type": "node",
-			"name": "db:createDB",
-			"request": "launch",
-			"skipFiles": ["<node_internals>/*"],
-			"program": "${workspaceFolder}/bin/createDB.js",
-			"env": {
-				"AWS_REGION": "us-east-1",
-				"DYNAMODB_ENDPOINT": "http://localhost:8000"
-			}
-		},
-		{
-			"type": "node",
-			"name": "db:dropDB",
-			"request": "launch",
-			"skipFiles": ["<node_internals>/*"],
-			"program": "${workspaceFolder}/bin/dropDB.js",
-			"env": {
-				"AWS_REGION": "us-east-1",
-				"DYNAMODB_ENDPOINT": "http://localhost:8000"
-			}
-		},
-		{
-			"type": "node",
-			"name": "db:resetDB",
-			"request": "launch",
-			"skipFiles": ["<node_internals>/*"],
-			"program": "${workspaceFolder}/bin/resetDB.js",
-			"env": {
-				"AWS_REGION": "us-east-1",
-				"DYNAMODB_ENDPOINT": "http://localhost:8000"
-			}
-		},
-		{
-			"type": "node",
-			"name": "server",
-			"request": "launch",
-			"skipFiles": ["<node_internals>/*"],
-			"program": "${workspaceFolder}/bin/server.js",
-			"env": {
-				"AWS_REGION": "us-east-1",
-				"DYNAMODB_ENDPOINT": "http://localhost:8000",
-				"DEBUG": "workshopCM*"
-			},
-			"restart": "true",
-			"sourceMaps": false,
-			"outputCapture": "std"
-		}
-	]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "name": "db:createDB",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/*"
+      ],
+      "program": "${workspaceFolder}/bin/createDB.js",
+      "env": {
+        "AWS_REGION": "us-east-1",
+        "DYNAMODB_ENDPOINT": "http://localhost:8000"
+      }
+    },
+    {
+      "type": "node",
+      "name": "db:dropDB",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/*"
+      ],
+      "program": "${workspaceFolder}/bin/dropDB.js",
+      "env": {
+        "AWS_REGION": "us-east-1",
+        "DYNAMODB_ENDPOINT": "http://localhost:8000"
+      }
+    },
+    {
+      "type": "node",
+      "name": "db:resetDB",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/*"
+      ],
+      "program": "${workspaceFolder}/bin/resetDB.js",
+      "env": {
+        "AWS_REGION": "us-east-1",
+        "DYNAMODB_ENDPOINT": "http://localhost:8000"
+      }
+    },
+    {
+      "type": "node",
+      "name": "server",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/*"
+      ],
+      "program": "${workspaceFolder}/bin/server.js",
+      "env": {
+        "AWS_REGION": "us-east-1",
+        "DYNAMODB_ENDPOINT": "http://localhost:8000",
+        "PRODUCTS_TABLE": "workshop-products-bruno",
+        "CLIENTS_TABLE": "workshop-clients-bruno",
+        "AWS_ACCESS_KEY_ID": "local",
+        "AWS_SECRET_ACCESS_KEY": "local",
+        "DEBUG": "workshopCM*"
+      },
+      "restart": "true",
+      "sourceMaps": false,
+      "outputCapture": "std"
+    }
+  ]
 }

@@ -9,18 +9,18 @@ const productService = new ProductService();
 /**
  * Get All products or product by name
  */
-router.get('/products', async (req) => {
-	const filterName = req.query.filter || null;
+router.get('/', async (req) => {
+	const filterName = req.query ? req.query : undefined;
 
-	const result = await productService.getAll(filterName);
+	const result = await productService.findAll(filterName);
 	return result;
 });
 
 /**
  * Get product by Id
  */
-router.get('/products/:id', async (req) => {
-	const result = await productService.getById(req.params.id);
+router.get('/{id}', async (req) => {
+	const result = await productService.findById(req.params.id);
 
 	return result;
 });
@@ -28,7 +28,7 @@ router.get('/products/:id', async (req) => {
 /**
  * Insert product
  */
-router.post('/products', async (req, res) => {
+router.post('/', async (req, res) => {
 	const result = await productService.post(req.bodyParsed);
 
 	return res(result, { statusCode: 201 });
@@ -37,15 +37,15 @@ router.post('/products', async (req, res) => {
 /**
  * Update product
  */
-router.put('/products/:id', async (req) => {
-	const result = await productService.put(req.bodyParsed);
+router.put('/{id}', async (req) => {
+	const result = await productService.put(req.params.id, req.bodyParsed);
 	return result;
 });
 
 /**
  * Delete product
  */
-router.delete('/products/:id', async (req, res) => {
+router.delete('/{id}', async (req, res) => {
 	await productService.delete(req.params.id);
 
 	return res(null, { statusCode: 204 });

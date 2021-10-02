@@ -1,8 +1,12 @@
 const { DynamoDbSchema, DynamoDbTable } = require('@aws/dynamodb-data-mapper');
 
-class product {
+class Product {
+	constructor(options = {}) {
+		Object.assign(this, options);
+	}
+
 	get [DynamoDbTable]() {
-		this.tableName = 'products';
+		this.tableName = process.env.PRODUCTS_TABLE || 'products';
 
 		return this.tableName;
 	}
@@ -13,11 +17,11 @@ class product {
 				type: 'String',
 				keyType: 'HASH',
 			},
-			nome: { type: 'String' },
-			price: { type: 'String' },
+			name: { type: 'String' },
+			price: { type: 'Number' },
 		};
 		return this.productSchema;
 	}
 }
 
-module.exports = product;
+module.exports = Product;

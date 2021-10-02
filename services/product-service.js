@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable class-methods-use-this */
 const { DataMapper } = require('@aws/dynamodb-data-mapper');
@@ -6,9 +7,11 @@ const { v4: uuid } = require('uuid');
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 
-const { Validate } = require('../lib/errors/validate');
-const { ErrorMessages } = require('../lib/errors/error-messages');
-const { Product } = require('../models/Product');
+const Validate = require('../lib/errors/validate');
+const ErrorMessages = require('../lib/errors/error-messages');
+
+const Product = require('../models/Product');
+// const { NotFoundError } = require('../lib/errors/errors');
 
 const { DYNAMODB_ENDPOINT } = process.env;
 
@@ -16,23 +19,22 @@ module.exports = class productService {
 	constructor() {
 		this.client = new DynamoDB({
 			...(DYNAMODB_ENDPOINT && {
-				endpoint: new Endpoint(DYNAMODB_ENDPOINT),
+				endpoint: new Endpoint(process.env.DYNAMODB_ENDPOINT),
 			}),
 		});
 
 		this.mapper = new DataMapper({ client: this.client });
-
-		this.Model = Product;
+		this.model = Product;
 	}
 
 	async validateProd(product) {
-		Validate.isEmpty(product.nome);
-		Validate.isEmpty(product.price);
-		Validate.isNonNegative(product.price);
+		Validate.isEmpty(product.name, 'name');
+		Validate.isEmpty(product.price, 'price');
+		Validate.isNonNegative(product.price, 'price');
 	}
 
 	async validateIdExists(id) {
-		const idExists = await this.getById(id);
+		const idExists = await this.findById(id);
 
 		if (!idExists) {
 			ErrorMessages.notFoundResource();
@@ -41,47 +43,46 @@ module.exports = class productService {
 
 	async save(item) {
 		const itemInserted = await this.mapper.put(item, { onMissing: 'skip' });
+
 		return itemInserted;
 	}
 
 	// GET All
-	async getAll(filterName) {
+	async findAll(filterName) {
 		const products = [];
-
-		const defaultCondition = {
+		const filterSortId = {
 			type: 'Function',
-			subject: 'nome',
-			name: 'attribute exists',
+			name: 'attribute_exists',
+			subject: 'id',
 		};
 
 		const scanFilter = {
 			filter: {
 				type: 'And',
-				conditions: [filterName || defaultCondition],
+				conditions: [filterName || filterSortId],
 			},
 		};
 
-		const iterator = this.mapper.scan(this.Model, scanFilter);
+		const iterator = this.mapper.scan(this.model, scanFilter);
 
 		for await (const product of iterator) {
 			products.push(product);
 		}
-
 		return products;
 	}
 
 	// GET By Id
-	async getById(id) {
+	async findById(id) {
 		let product = {};
 		try {
-			product = await this.mapper.get(new this.Model({ id }));
+			product = await this.mapper.get(new this.model({ id }));
 
 			if (!product.deletedAt) {
 				return product;
 			}
 		} catch (e) {
 			if (e.name === 'ItemNotFoundException') {
-				ErrorMessages.notFoundResource();
+				console.log('not found');
 			}
 
 			throw e;
@@ -93,7 +94,7 @@ module.exports = class productService {
 	async post(item) {
 		await this.validateProd(item);
 
-		const modelProduct = new this.Model({ id: uuid(), ...item });
+		const modelProduct = new this.model({ id: uuid(), ...item });
 
 		await this.save(modelProduct);
 
@@ -107,14 +108,14 @@ module.exports = class productService {
 		await this.validateProd(body);
 		await this.validateIdExists(id);
 
-		const newProduct = new this.Model({ id, ...body });
+		const newProduct = new this.model({ id, ...body });
 
-		return this.saveItem(newProduct);
+		return this.save(newProduct);
 	}
 
 	// DELETE
 	async delete(id) {
-		const productToDelete = await this.getById(id);
+		const productToDelete = await this.findById(id);
 
 		if (!productToDelete) {
 			ErrorMessages.notFoundResource();

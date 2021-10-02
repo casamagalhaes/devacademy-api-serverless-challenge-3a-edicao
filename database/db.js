@@ -27,8 +27,8 @@ const describeTable = (tableName, attrName) => ({
 });
 
 const tables = [
-	describeTable('produtos', 'id'),
-	describeTable('clientes', 'id'),
+	describeTable('products', 'id'),
+	describeTable('clients', 'id'),
 ];
 
 /**

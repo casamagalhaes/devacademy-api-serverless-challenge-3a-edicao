@@ -6,40 +6,40 @@ info:
 servers:
   - url: http://localhost:3000
 tags:
-  - name: products
-    description: Products Collection
+  - name: produtos
+    description: Produtos Collection
 
-  - name: clients
-    description: Clients Collection
+  - name: clientes
+    description: Clientes Collection
 
 paths:
-  /products:
+  /produtos:
     get:
       tags:
-        - product
-      summary: List products
-      operationId: listProducts
+        - produtos
+      summary: List produtos
+      operationId: listProdutos
       responses:
         200:
-          description: List of products
+          description: List of produtos
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Product"
+                  $ref: "#/components/schemas/Produto"
       x-codegen-request-body-name: body
     post:
       tags:
-        - product
-      summary: Add a new product
-      operationId: addProduct
+        - produtos
+      summary: Add a new produto
+      operationId: addProduto
       requestBody:
-        description: Payload of product
+        description: Payload of produto
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Product"
+              $ref: "#/components/schemas/Produto"
         required: true
       responses:
         200:
@@ -47,22 +47,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/Produto"
         400:
           description: Invalid input
           content: {}
       x-codegen-request-body-name: body
-  /products/{productId}:
+  /produtos/{productId}:
     get:
       tags:
-        - product
-      summary: Find product by ID
-      description: Returns a single product
-      operationId: getProductById
+        - produtos
+      summary: Find produto by ID
+      description: Returns a single produto
+      operationId: getProdutoById
       parameters:
-        - name: productId
+        - name: produtoId
           in: path
-          description: ID of product to return
+          description: ID of produto to return
           required: true
           schema:
             type: string
@@ -73,22 +73,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/Produto"
         400:
           description: Invalid ID supplied
           content: {}
         404:
-          description: Product not found
+          description: Produto not found
           content: {}
     put:
       tags:
-        - product
-      summary: Updates a product
-      operationId: updateProduct
+        - produtos
+      summary: Updates a produto
+      operationId: updateProduto
       parameters:
-        - name: productId
+        - name: produtoId
           in: path
-          description: ID of product that needs to be updated
+          description: ID of produto that needs to be updated
           required: true
           schema:
             type: string
@@ -97,23 +97,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/product"
+              $ref: "#/components/schemas/Produto"
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/product"
+                $ref: "#/components/schemas/Produto"
     delete:
       tags:
-        - product
-      summary: Deletes a product
-      operationId: deleteProduct
+        - produtos
+      summary: Deletes a produto
+      operationId: deleteProduto
       parameters:
-        - name: productId
+        - name: produtoId
           in: path
-          description: product id to delete
+          description: produto id to delete
           required: true
           schema:
             type: string
@@ -123,19 +123,19 @@ paths:
           description: Invalid ID supplied
           content: {}
         404:
-          description: Product not found
+          description: Produto not found
           content: {}
-  /products/{productName}:
+  /produtos?filter={filterName}:
     get:
       tags:
-        - product
-      summary: Find product by Name
-      description: List of products with Name containing productName
-      operationId: getproductsByName
+        - produtos
+      summary: Find produto by Name
+      description: List of produtos with Name containing filterName
+      operationId: getProdutosByName
       parameters:
-        - name: productName
+        - name: filterName
           in: path
-          description: Name of product to return
+          description: Name of produtos to return
           required: true
           schema:
             type: string
@@ -146,42 +146,42 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/Produto"
         400:
           description: Invalid Name supplied
           content: {}
         404:
-          description: No product found
+          description: No produto found
           content: {}
 
   /clients:
     get:
       tags:
-        - client
-      summary: List clients
-      operationId: listClients
+        - clientes
+      summary: List clientes
+      operationId: listClientes
       responses:
         200:
-          description: List of clients
+          description: List of clientes
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Client"
+                  $ref: "#/components/schemas/Cliente"
       x-codegen-request-body-name: body
 
     post:
       tags:
-        - client
-      summary: Add a new client
+        - clientes
+      summary: Add a new cliente
       operationId: addClient
       requestBody:
         description: Payload of client
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Client"
+              $ref: "#/components/schemas/Cliente"
         required: true
       responses:
         200:
@@ -198,14 +198,14 @@ paths:
   /clients/{clientId}:
     get:
       tags:
-        - client
-      summary: Find client by ID
-      description: Returns a single client
-      operationId: getClientById
+        - clientes
+      summary: Find cliente by ID
+      description: Returns a single cliente
+      operationId: getClienteById
       parameters:
-        - name: clientId
+        - name: clienteId
           in: path
-          description: ID of client to return
+          description: ID of cliente to return
           required: true
           schema:
             type: string
@@ -216,22 +216,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Client"
+                $ref: "#/components/schemas/Cliente"
         400:
           description: Invalid ID supplied
           content: {}
         404:
-          description: client not found
+          description: Cliente not found
           content: {}
     put:
       tags:
-        - client
-      summary: Updates a client
-      operationId: updateClient
+        - clientes
+      summary: Updates a cliente
+      operationId: updateCliente
       parameters:
-        - name: clientId
+        - name: clienteId
           in: path
-          description: ID of client that needs to be updated
+          description: ID of cliente that needs to be updated
           required: true
           schema:
             type: string
@@ -240,23 +240,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Client"
+              $ref: "#/components/schemas/Cliente"
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Client"
+                $ref: "#/components/schemas/Cliente"
     delete:
       tags:
-        - client
-      summary: Deletes a client
-      operationId: deleteClient
+        - clientes
+      summary: Deletes a cliente
+      operationId: deleteCliente
       parameters:
-        - name: clientId
+        - name: clienteId
           in: path
-          description: client id to delete
+          description: cliente id to delete
           required: true
           schema:
             type: string
@@ -266,20 +266,20 @@ paths:
           description: Invalid ID supplied
           content: {}
         404:
-          description: client not found
+          description: Cliente not found
           content: {}
 
-  /clients/{clientName}:
+  /clients?filter={filterName}:
     get:
       tags:
-        - client
+        - clientes
       summary: Find client by Name
-      description: List of clients with Name containing clientName
+      description: List of clients with Name containing filterName
       operationId: getClientsByName
       parameters:
-        - name: clientName
+        - name: filterName
           in: path
-          description: Name of client to return
+          description: Name of cliente to return
           required: true
           schema:
             type: string
@@ -290,16 +290,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Client"
+                $ref: "#/components/schemas/Cliente"
         400:
           description: Invalid name supplied
           content: {}
         404:
-          description: No Client found
+          description: No Cliente found
           content: {}
 components:
   schemas:
-    Product:
+    Produto:
       required:
         - name
       type: object
@@ -307,11 +307,11 @@ components:
         id:
           type: string
           format: uuid
-        Name:
+        name:
           type: string
         price:
           type: number
-    Client:
+    Cliente:
       required:
         - name
         - password

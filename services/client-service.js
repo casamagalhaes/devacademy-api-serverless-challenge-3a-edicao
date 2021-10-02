@@ -6,7 +6,7 @@ const { Endpoint } = require('aws-sdk');
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 
-const { Validate } = require('../lib/errors/validate');
+const Validate = require('../lib/errors/validate');
 const { ErrorMessages } = require('../lib/errors/error-messages');
 const { Client } = require('../models/Client');
 
