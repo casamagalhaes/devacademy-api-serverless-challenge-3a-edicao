@@ -11,7 +11,6 @@ const Validate = require('../lib/errors/validate');
 const ErrorMessages = require('../lib/errors/error-messages');
 
 const Product = require('../models/Product');
-// const { NotFoundError } = require('../lib/errors/errors');
 
 const { DYNAMODB_ENDPOINT } = process.env;
 
@@ -56,10 +55,12 @@ module.exports = class productService {
 			subject: 'id',
 		};
 
+		console.log(filterName);
+
 		const scanFilter = {
 			filter: {
 				type: 'And',
-				conditions: [filterName || filterSortId],
+				conditions: [filterSortId],
 			},
 		};
 
@@ -82,7 +83,7 @@ module.exports = class productService {
 			}
 		} catch (e) {
 			if (e.name === 'ItemNotFoundException') {
-				console.log('not found');
+				ErrorMessages.notFoundResource('id');
 			}
 
 			throw e;
@@ -118,7 +119,7 @@ module.exports = class productService {
 		const productToDelete = await this.findById(id);
 
 		if (!productToDelete) {
-			ErrorMessages.notFoundResource();
+			ErrorMessages.notFoundResource('id');
 		}
 
 		return this.mapper.delete(productToDelete, { onMissing: 'skip' });
