@@ -7,20 +7,20 @@ const ProductService = require('../services/product-service');
 const productService = new ProductService();
 
 /**
- * Get All products or product by name
+ * Get All products or products by name
  */
 router.get('/', async (req) => {
-	const filterName = req.query ? req.query.filter : undefined;
+	const filterName = req.query ? req.query.filter : null;
 
-	const result = await productService.findAll(filterName);
+	const result = await productService.getAll(filterName);
 	return result;
 });
 
 /**
- * Get product by Id
+ * Get Product by Id
  */
 router.get('/{id}', async (req) => {
-	const result = await productService.findById(req.params.id);
+	const result = await productService.getById(req.params.id);
 
 	return result;
 });
@@ -46,7 +46,7 @@ router.put('/{id}', async (req) => {
  * Delete product
  */
 router.delete('/{id}', async (req, res) => {
-	await productService.delete(req.params.id);
+	await productService.deleteById(req.params.id);
 
 	return res(null, { statusCode: 204 });
 });

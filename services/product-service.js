@@ -6,10 +6,8 @@ const { Endpoint } = require('aws-sdk');
 const { v4: uuid } = require('uuid');
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
-
 const Validate = require('../lib/errors/validate');
 const ErrorMessages = require('../lib/errors/error-messages');
-
 const Product = require('../models/Product');
 
 const { DYNAMODB_ENDPOINT } = process.env;
@@ -36,7 +34,7 @@ module.exports = class productService {
 		const idExists = await this.findById(id);
 
 		if (!idExists) {
-			ErrorMessages.notFoundResource();
+			ErrorMessages.notFoundResource('id');
 		}
 	}
 
@@ -47,22 +45,21 @@ module.exports = class productService {
 	}
 
 	// GET All
-	async findAll() {
+	async getAll() {
 		const products = [];
-		const filterSortId = {
-			type: 'Function',
-			name: 'attribute_exists',
-			subject: 'id',
-		};
 
 		const scanFilter = {
 			filter: {
 				type: 'And',
-				conditions: [filterSortId],
+				conditions: [
+					{
+						type: 'Function',
+						name: 'attribute_exists',
+						subject: 'id',
+					},
+				],
 			},
 		};
-
-		// console.log(filterName);
 
 		const iterator = this.mapper.scan(this.model, scanFilter);
 
@@ -72,8 +69,8 @@ module.exports = class productService {
 		return products;
 	}
 
-	// GET By Id
-	async findById(id) {
+	// GET BY ID
+	async getById(id) {
 		let product = {};
 		try {
 			product = await this.mapper.get(new this.model({ id }));
@@ -104,7 +101,7 @@ module.exports = class productService {
 
 	// PUT
 	async put(id, body) {
-		/* Validates before trying to insert */
+		/* Validates before trying to update */
 		Validate.validateIds(id, body.id);
 		await this.validateProd(body);
 		await this.validateIdExists(id);
@@ -114,8 +111,8 @@ module.exports = class productService {
 		return this.save(newProduct);
 	}
 
-	// DELETE
-	async delete(id) {
+	// DELETE BY ID
+	async deleteById(id) {
 		const productToDelete = await this.findById(id);
 
 		if (!productToDelete) {

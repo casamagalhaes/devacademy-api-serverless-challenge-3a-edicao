@@ -1,17 +1,16 @@
+/* eslint-disable new-cap */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable class-methods-use-this */
 const { DataMapper } = require('@aws/dynamodb-data-mapper');
-const { v4: uuid } = require('uuid');
 const { Endpoint } = require('aws-sdk');
+const { v4: uuid } = require('uuid');
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
-
 const Validate = require('../lib/errors/validate');
-const { ErrorMessages } = require('../lib/errors/error-messages');
-const { Client } = require('../models/Client');
+const ErrorMessages = require('../lib/errors/error-messages');
+const Client = require('../models/Client');
 
 const { DYNAMODB_ENDPOINT } = process.env;
-
 module.exports = class clientService {
 	constructor() {
 		this.client = new DynamoDB({
@@ -26,16 +25,16 @@ module.exports = class clientService {
 	}
 
 	async validateClient(client) {
-		Validate.isEmpty(client.name);
-		Validate.isEmpty(client.price);
-		Validate.isNonNegative(client.price);
+		Validate.isEmpty(client.name, 'name');
+		Validate.isEmpty(client.email, 'email');
+		Validate.isEmpty(client.password, 'password');
 	}
 
 	async validateIdExists(id) {
 		const idExists = await this.getById(id);
 
 		if (!idExists) {
-			ErrorMessages.notFoundResource();
+			ErrorMessages.notFoundResource('id');
 		}
 	}
 
@@ -44,33 +43,33 @@ module.exports = class clientService {
 		return itemInserted;
 	}
 
-	// GET All
-	async getAll(filterName) {
-		const clientes = [];
-
-		const defaultCondition = {
-			type: 'Function',
-			subject: 'nome',
-			name: 'attribute exists',
-		};
+	// GET ALL
+	async getAll() {
+		const clients = [];
 
 		const scanFilter = {
 			filter: {
 				type: 'And',
-				conditions: [filterName || defaultCondition],
+				conditions: [
+					{
+						type: 'Function',
+						name: 'attribute_exists',
+						subject: 'id',
+					},
+				],
 			},
 		};
 
 		const iterator = this.mapper.scan(this.Model, scanFilter);
 
-		for await (const cliente of iterator) {
-			clientes.push(cliente);
+		for await (const client of iterator) {
+			clients.push(client);
 		}
 
-		return clientes;
+		return clients;
 	}
 
-	// GET By Id
+	// GET BY ID
 	async getById(id) {
 		let client = null;
 		try {
@@ -91,7 +90,7 @@ module.exports = class clientService {
 
 	// POST
 	async post(item) {
-		await this.validateProd(item);
+		await this.validateClient(item);
 
 		const modelClient = new this.Model({ id: uuid(), ...item });
 
@@ -102,7 +101,7 @@ module.exports = class clientService {
 
 	// PUT
 	async put(id, body) {
-		/* Validates before trying to insert */
+		/* Validates before trying to update */
 		Validate.validateIds(id, body.id);
 		await this.validateClient(body);
 		await this.validateIdExists(id);
@@ -118,7 +117,7 @@ module.exports = class clientService {
 
 		/* Client doesn't exist */
 		if (!clientToDelete) {
-			ErrorMessages.notFoundResource();
+			ErrorMessages.notFoundResource('id');
 		}
 
 		return this.mapper.delete(clientToDelete, { onMissing: 'skip' });
