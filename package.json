@@ -24,6 +24,7 @@
 	"homepage": "https://github.com/brunosm16/devacademy-api-serverless-challenge-3a-edicao#readme",
 	"dependencies": {
 		"@aws/dynamodb-data-mapper": "^0.7.3",
+		"@aws/dynamodb-data-mapper-annotations": "^0.7.3",
 		"@aws/dynamodb-expressions": "^0.7.3",
 		"aws-sdk": "^2.999.0",
 		"aws-serverless-express": "^3.4.0",

@@ -9,6 +9,7 @@ const DynamoDB = require('aws-sdk/clients/dynamodb');
 const Validate = require('../lib/errors/validate');
 const ErrorMessages = require('../lib/errors/error-messages');
 const Product = require('../models/Product');
+const Helpers = require('./helpers');
 
 const { DYNAMODB_ENDPOINT } = process.env;
 
@@ -45,8 +46,8 @@ module.exports = class productService {
 	}
 
 	// GET All
-	async getAll() {
-		const products = [];
+	async getAll(filterName) {
+		let products = [];
 
 		const scanFilter = {
 			filter: {
@@ -66,6 +67,12 @@ module.exports = class productService {
 		for await (const product of iterator) {
 			products.push(product);
 		}
+
+		if (filterName) {
+			const filteredArray = Helpers.filterItemsByName(filterName, products);
+			products = filteredArray;
+		}
+
 		return products;
 	}
 
