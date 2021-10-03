@@ -1,6 +1,6 @@
-## Desafio Dev.Academy
+## Desafio Dev.Academy Joaquim Firmo
 
-Desenvolva uma API REST para 2 entidades: produtos e clientes. Toda a arquitetura deve ser serverless utlizando API Gateway, Lambda e DynamoDB. 
+Desenvolva uma API REST para 2 entidades: produtos e clientes. Toda a arquitetura deve ser serverless utlizando API Gateway, Lambda e DynamoDB.
 Cada entidade deve ter uma lambda e uma tabela cada, garantindo a escalabilidade separadas dos componentes do sistema. A API deve permitir operações CRUD básicas de coleção e recursos, atráves dos verbos comuns: GET, POST, PUT, DELETE.
 Nas rotas de consulta da coleção, permita que o client envie um parâmetro `filter` pela URL para filtragem de nomes que contenham o valor do parâmetro, por exemplo:
 

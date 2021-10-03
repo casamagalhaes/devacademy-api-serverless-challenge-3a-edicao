@@ -1,0 +1,41 @@
+{
+  "name": "devacademy-api-joaquim",
+  "version": "1.0.0",
+  "description": "Desenvolva uma API REST para 2 entidades: produtos e clientes. Toda a arquitetura deve ser serverless utlizando API Gateway, Lambda e DynamoDB. \r Cada entidade deve ter uma lambda e uma tabela cada, garantindo a escalabilidade separadas dos componentes do sistema. A API deve permitir operações CRUD básicas de coleção e recursos, atráves dos verbos comuns: GET, POST, PUT, DELETE.\r Nas rotas de consulta da coleção, permita que o client envie um parâmetro `filter` pela URL para filtragem de nomes que contenham o valor do parâmetro, por exemplo:",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaquimfirmo/devacademy-api-serverless-challenge-3a-edicao.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.4.0"
+  },
+  "dependencies": {
+    "@vendia/serverless-express": "^4.3.11",
+    "aws-sdk": "^2.997.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "dynamoose": "^2.8.2",
+    "editorconfig": "^0.15.3",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
+  },
+  "bugs": {
+    "url": "https://github.com/joaquimfirmo/devacademy-api-serverless-challenge-3a-edicao/issues"
+  },
+  "homepage": "https://github.com/joaquimfirmo/devacademy-api-serverless-challenge-3a-edicao#readme"
+}
